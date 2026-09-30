@@ -48,3 +48,20 @@ Tunei na mão olhando F1. Não rodei GridSearch ainda (TODO).
 ---
 
 *Camila S. — Data Science*
+
+
+1. Matriz de Decisão
+Critérios de Avaliação e Pesos (1 a 3):
+
+Custo de Operação (Peso 3): O orçamento máximo é de 100 USD/mês. Soluções gratuitas ou de custo marginal (Serverless/PaaS) ganham vantagem.
+
+Velocidade de Desenvolvimento (Peso 3): Necessidade de criar uma API funcional rapidamente na Etapa 1.
+
+Integração com Machine Learning (Peso 2): Facilidade em carregar ficheiros .pkl (joblib) e lidar com dataframes ou matrizes.
+
+Geração de Documentação (Peso 2): Como a API será consumida pelo sistema de gestão das clínicas, ter a documentação da API gerada automaticamente poupa tempo.
+
+Alternativa (API),Custo (x3),Velocidade (x3),ML/Data (x2),Docs (x2),Total
+FastAPI,3 (9),3 (9),3 (6),3 (6),30
+Flask,3 (9),2 (6),3 (6),1 (2),23
+Django REST,2 (6),1 (3),2 (4),2 (4),17
