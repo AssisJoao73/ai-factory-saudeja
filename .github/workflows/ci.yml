@@ -25,6 +25,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Gerar Model.pkl para Testes
+      run: python gerar_modelo.py
+
     - name: Executar Smoke Tests (pytest)
       run: |
         pytest
