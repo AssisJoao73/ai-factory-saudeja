@@ -60,8 +60,7 @@ Tunei na mão olhando F1. Não rodei GridSearch ainda (TODO).
 * **Integração com Machine Learning (Peso 2):** Facilidade em carregar ficheiros `.pkl` (joblib) e lidar com dataframes ou matrizes.
 * **Geração de Documentação (Peso 2):** Como a API será consumida pelo sistema de gestão das clínicas, ter a documentação da API gerada automaticamente poupa tempo.
 
-| Alternativa (API) | Custo (x3) | Velocidade (x3) | ML/Data (x2) | Docs (x2) | **Total** |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **FastAPI** | 3 (9) | 3 (9) | 3 (6) | 3 (6) | **30** |
-| **Flask** | 3 (9) | 2 (6) | 3 (6) | 1 (2) | **23** |
-| **Django REST**| 2 (6) | 1 (3) | 2 (4) | 2 (4) | **17** |
+Alternativa (API),Custo (x3),Velocidade (x3),ML/Data (x2),Docs (x2),Total
+FastAPI,3 (9),3 (9),3 (6),3 (6),30
+Flask,3 (9),2 (6),3 (6),1 (2),23
+Django REST,2 (6),1 (3),2 (4),2 (4),17
