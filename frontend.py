@@ -20,7 +20,7 @@ if st.button("Analisar Paciente"):
     }
     
     # Bate na porta da sua API
-    resposta = requests.post("http://127.0.0.1:8000/predict", json=payload)
+    resposta = requests.post("https://ai-factory-saudeja.onrender.com/predict", json=payload)
     
     # Mostra a mensagem da IA no ecrã com uma caixa verde de sucesso!
     st.success(resposta.json()["recomendacao_secretaria"])
