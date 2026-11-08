@@ -7,9 +7,6 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # 2. Verifica se a chave foi carregada com sucesso
 minha_chave = os.getenv("GEMINI_API_KEY")
-print("\n" + "="*30)
-print(f"DEBUG DA CHAVE: {minha_chave}")
-print("="*30 + "\n")
 
 # 3. Importa o resto e configura a IA
 import re
