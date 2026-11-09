@@ -66,21 +66,21 @@ Abra um novo terminal, ative o venv e execute:
 streamlit run frontend.py
 
 Troubleshooting (Resolução de Problemas Comuns)
- Erro 429 - Quota Exceeded (Gemini API): O limite do escalão gratuito foi atingido (20
+ Erro 429 - Quota Exceeded (Gemini API): O limite do escalão gratuito foi atingido (20
 chamadas/dia). O sistema devolve automaticamente a mensagem genérica de erro.
 Solução: Aguarde a reinicialização da quota diária ou faça upgrade da conta de faturação
 na Google Cloud.
 
- Timeout no Build do Render (Demora &gt; 15 min): Versões demasiado recentes do Python
+ Timeout no Build do Render (Demora &gt; 15 min): Versões demasiado recentes do Python
 (3.12+) podem não possuir wheels pré-compilados para o lightgbm ou scikit-learn.
 Solução: Configure a variável de ambiente PYTHON_VERSION=3.11.9 no painel do
 Render e execute um Clear Build Cache.
- Erro ao carregar model.pkl (Dicionário vs. Modelo): A versão herdada da API esperava
+ Erro ao carregar model.pkl (Dicionário vs. Modelo): A versão herdada da API esperava
 um objeto de modelo puro. A versão atual espera um dicionário {&quot;model&quot;: modelo,
 &quot;mapa_especialidade&quot;: mapa_esp}. Certifique-se de gerar o modelo sempre com python
 train.py e nunca com os scripts sintéticos descontinuados.
 
 Links do Projeto
- URL da Aplicação (Frontend): 
- URL da API (Swagger UI): 
- Vídeo de Apresentação (Pitch): 
+ URL da Aplicação (Frontend): 
+ URL da API (Swagger UI): 
+ Vídeo de Apresentação (Pitch): 
