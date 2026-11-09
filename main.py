@@ -18,7 +18,7 @@ app = FastAPI(title="SaúdeJá API - Etapa 2")
 cache_ia = {}
 
 # Usa a versão correta e mais rápida do Gemini
-llm_model = genai.GenerativeModel('gemini-pro')
+llm_model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Carrega o modelo LightGBM com blindagem contra erros de leitura
 try:
