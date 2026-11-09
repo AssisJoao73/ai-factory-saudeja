@@ -1,14 +1,5 @@
 import os
 from dotenv import load_dotenv
-
-# 1. Força a procurar o .env exatamente na mesma pasta onde este script está
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-load_dotenv(os.path.join(BASE_DIR, ".env"))
-
-# 2. Verifica se a chave foi carregada com sucesso
-minha_chave = os.getenv("GEMINI_API_KEY")
-
-# 3. Importa o resto e configura a IA
 import re
 import google.generativeai as genai
 from fastapi import FastAPI
@@ -16,34 +7,32 @@ from pydantic import BaseModel
 import joblib
 import pandas as pd
 
-# 4. Passa a variável de forma explícita para o Gemini
-genai.configure(api_key=minha_chave)
+# Carrega Variáveis
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+minha_chave = os.getenv("GEMINI_API_KEY")
 
+# Configura IA
+genai.configure(api_key=minha_chave)
 app = FastAPI(title="SaúdeJá API - Etapa 2")
-# Cache global para armazenar respostas da IA e economizar tempo/dinheiro
 cache_ia = {}
-# ... resto do código continua igual ...
+
+# Usa a versão correta e mais rápida do Gemini
 llm_model = genai.GenerativeModel('gemini-1.5-flash')
 
-# Carrega o modelo LightGBM treinado na Etapa 1
+# Carrega o modelo LightGBM com blindagem contra erros de leitura
 try:
     artefatos = joblib.load("model.pkl")
-    
-    # Desempacota de forma segura, quer seja um dicionário ou o modelo direto
     if isinstance(artefatos, dict) and "model" in artefatos:
         model = artefatos["model"]
     else:
         model = artefatos
-        
-    # BLINDAGEM: Se houver conflito e ele ler um dict, anulamos a variável
-    # para usar o fallback sem nunca gerar o Erro 500 na interface.
+    
     if not hasattr(model, 'predict_proba'):
         model = None
-        
 except:
     model = None
 
-# Modelo de entrada unificado (Dados ML + PII)
 class PatientData(BaseModel):
     nome: str
     cpf: str
@@ -54,7 +43,6 @@ class PatientData(BaseModel):
     dias_entre_agendamento_consulta: int
     historico_noshow: int
 
-# Função de Sanitização (Requisito LGPD)
 def sanitize_pii(nome: str, cpf: str):
     partes = nome.split()
     nome_mascarado = partes[0]
@@ -71,7 +59,6 @@ def sanitize_pii(nome: str, cpf: str):
 
 @app.post("/predict")
 async def predict_no_show(data: PatientData):
-    # 1. Predição de Risco (Seu modelo real da etapa 1)
     if model:
         df = pd.DataFrame([{
             "idade": data.idade,
@@ -84,35 +71,25 @@ async def predict_no_show(data: PatientData):
         probabilidade = model.predict_proba(df)[0][1] * 100
         risco_no_show = round(probabilidade, 2)
     else:
-        risco_no_show = 82.5 # Valor fixo caso o modelo não esteja na pasta
+        risco_no_show = 82.5
         
-    # 2. Sanitização (LGPD em ação)
     nome_seguro, cpf_seguro = sanitize_pii(data.nome, data.cpf)
     
-    # 3. Chamada ao LLM apenas com os dados limpos
     prompt = (
         f"Aja como um assistente de clínica. O paciente {nome_seguro} (CPF: {cpf_seguro}) "
         f"tem um risco de {risco_no_show}% de faltar. Escreva uma mensagem curta (máximo 2 linhas) "
         "instruindo a secretária sobre como abordar esse paciente para confirmar a presença."
     )
     
-    # Cria uma chave única para este paciente e este nível de risco
     chave_paciente = f"{cpf_seguro}_{risco_no_show}"
     
-    # 1. Verifica se a resposta já está no cache
     if chave_paciente in cache_ia:
         recomendacao = cache_ia[chave_paciente]
-    
-    # 2. Se não estiver, vai ao Google pedir a geração
     else:
         try:
-            # Adicione 'await' no início e '_async' no final do método
             resposta_llm = await llm_model.generate_content_async(prompt)
             recomendacao = resposta_llm.text.strip()
-            
-            # 3. Salva a resposta nova no cache para a próxima vez!
             cache_ia[chave_paciente] = recomendacao 
-            
         except Exception as e:
             recomendacao = "Erro na IA. Por favor, ligue e confirme manualmente a consulta."
 
