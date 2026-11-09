@@ -14,7 +14,7 @@ minha_chave = os.getenv("GEMINI_API_KEY")
 
 # Configura IA
 genai.configure(api_key=minha_chave)
-app = FastAPI(title="SaúdeJá API - Etapa 2")
+app = FastAPI(title="SaúdeJá API")
 cache_ia = {}
 
 # Usa a versão correta e mais rápida do Gemini
