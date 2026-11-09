@@ -91,7 +91,7 @@ async def predict_no_show(data: PatientData):
             recomendacao = resposta_llm.text.strip()
             cache_ia[chave_paciente] = recomendacao 
         except Exception as e:
-            recomendacao = "Erro na IA. Por favor, ligue e confirme manualmente a consulta."
+            recomendacao = f"Erro exato do Google: {str(e)}"
 
     return {
         "paciente": nome_seguro,
