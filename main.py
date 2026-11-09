@@ -27,7 +27,19 @@ llm_model = genai.GenerativeModel('gemini-3.8-flash')
 
 # Carrega o modelo LightGBM treinado na Etapa 1
 try:
-    model = joblib.load("model.pkl")
+    artefatos = joblib.load("model.pkl")
+    
+    # Desempacota de forma segura, quer seja um dicionário ou o modelo direto
+    if isinstance(artefatos, dict) and "model" in artefatos:
+        model = artefatos["model"]
+    else:
+        model = artefatos
+        
+    # BLINDAGEM: Se houver conflito e ele ler um dict, anulamos a variável
+    # para usar o fallback sem nunca gerar o Erro 500 na interface.
+    if not hasattr(model, 'predict_proba'):
+        model = None
+        
 except:
     model = None
 
@@ -90,12 +102,10 @@ async def predict_no_show(data: PatientData):
     # 1. Verifica se a resposta já está no cache
     if chave_paciente in cache_ia:
         recomendacao = cache_ia[chave_paciente]
-        print("\n⚡ [CACHE] Resposta instantânea! Poupou ida ao Google.\n")
     
     # 2. Se não estiver, vai ao Google pedir a geração
     else:
         try:
-            print("\n☁️ [API] Indo buscar no Google...\n")
             # Adicione 'await' no início e '_async' no final do método
             resposta_llm = await llm_model.generate_content_async(prompt)
             recomendacao = resposta_llm.text.strip()
@@ -104,7 +114,6 @@ async def predict_no_show(data: PatientData):
             cache_ia[chave_paciente] = recomendacao 
             
         except Exception as e:
-            print(f"========== ERRO DA API: {e} ==========")
             recomendacao = "Erro na IA. Por favor, ligue e confirme manualmente a consulta."
 
     return {
