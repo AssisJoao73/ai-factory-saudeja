@@ -23,7 +23,7 @@ app = FastAPI(title="SaúdeJá API - Etapa 2")
 # Cache global para armazenar respostas da IA e economizar tempo/dinheiro
 cache_ia = {}
 # ... resto do código continua igual ...
-llm_model = genai.GenerativeModel('gemini-3.8-flash')
+llm_model = genai.GenerativeModel('gemini-1.5-flash')
 
 # Carrega o modelo LightGBM treinado na Etapa 1
 try:
