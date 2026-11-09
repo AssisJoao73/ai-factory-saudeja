@@ -7,20 +7,28 @@ cpf_paciente = st.text_input("CPF (apenas números)")
 idade_paciente = st.number_input("Idade", min_value=0)
 # Crie agora os campos para sexo, especialidade, distancia_km, etc... usando st.number_input
 if st.button("Analisar Paciente"):
-    # Preencha o resto deste dicionário com as variáveis que criou no Passo 3
     payload = {
         "nome": nome_paciente,
         "cpf": cpf_paciente,
         "idade": idade_paciente,
-        "sexo": 0, # Substitua pela sua variável
-        "especialidade": 0, # Substitua...
+        "sexo": 0, 
+        "especialidade": 0, 
         "distancia_km": 10,
         "dias_entre_agendamento_consulta": 0,
         "historico_noshow": 0
     }
     
-    # Bate na porta da sua API
-    resposta = requests.post("https://ai-factory-saudeja.onrender.com/predict", json=payload)
+    url_api = "https://ai-factory-saudeja.onrender.com/predict"
     
-    # Mostra a mensagem da IA no ecrã com uma caixa verde de sucesso!
-    st.success(resposta.json()["recomendacao_secretaria"])
+    try:
+        resposta = requests.post(url_api, json=payload)
+        
+        # Verifica se a API devolveu sucesso (200 OK)
+        if resposta.status_code == 200:
+            dados = resposta.json()
+            st.success(dados["recomendacao_secretaria"])
+        else:
+            st.error(f"Erro na API (Status {resposta.status_code}): {resposta.text}")
+            
+    except requests.exceptions.RequestException as e:
+         st.error(f"Falha de conexão com a API: {e}")
